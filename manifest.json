@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Report Twitter",
+  "version": "1.0",
+  "description": "Automatiza reportes de tweets con un solo clic.",
+  "permissions": ["scripting", "tabs", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "https://twitter.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://twitter.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
