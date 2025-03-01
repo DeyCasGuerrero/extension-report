@@ -18,7 +18,7 @@ document.getElementById("report").addEventListener("click", async () => {
 });
 
 function reportTweet(reason) {
-    let numberOption = parseInt(reason, 10); // Convertimos reason a número
+    let numberOption = parseInt(reason, 10); 
 
     function logMessage(message) {
         chrome.runtime.sendMessage({ log: message });
@@ -28,7 +28,7 @@ function reportTweet(reason) {
     let menuButton = document.querySelector('button[data-testid="caret"]') ||
         document.querySelector('button[aria-haspopup="menu"]') ||
         [...document.querySelectorAll("button")].find(btn =>
-            btn.querySelector("svg[viewBox='0 0 24 24']") // Busca el icono de menú
+            btn.querySelector("svg[viewBox='0 0 24 24']") 
         );
 
    
