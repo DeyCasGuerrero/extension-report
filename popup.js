@@ -1,9 +1,10 @@
 document.getElementById("report").addEventListener("click", async () => {
     let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     let reportReason = document.getElementById("report-reason").value;
+    let timeBetweenReports = document.getElementById("time").value;
     console.log(`⏳ Reportando el tweet en ${tab.title}...`);
-    // alert(`⏳ Reportando el tweet en ${tab.title} con motivo: ${reportReason}`);
 
+    let timeBetweenReportsInMilliseconds = parseInt(timeBetweenReports, 10);
     async function loopReports(){
         while(true){
             chrome.scripting.executeScript({
@@ -11,7 +12,7 @@ document.getElementById("report").addEventListener("click", async () => {
                 function: reportTweet,
                 args: [reportReason]
             });
-            await new Promise(resolve => setTimeout(resolve, 60000));
+            await new Promise(resolve => setTimeout(resolve, timeBetweenReportsInMilliseconds));
         }
     }
     loopReports();
@@ -24,14 +25,36 @@ function reportTweet(reason) {
         chrome.runtime.sendMessage({ log: message });
     }
 
-    logMessage("🔍 Buscando botón de más opciones...");
-    let menuButton = document.querySelector('button[data-testid="caret"]') ||
-        document.querySelector('button[aria-haspopup="menu"]') ||
-        [...document.querySelectorAll("button")].find(btn =>
-            btn.querySelector("svg[viewBox='0 0 24 24']") 
-        );
+    logMessage("🔍 Buscando el tweet que está visible en la página...");
 
-   
+    // Seleccionar el tweet más visible en pantalla
+    let tweets = document.querySelectorAll("article");
+    let tweetToReport = null;
+    let maxVisibleHeight = 0;
+
+    tweets.forEach(tweet => {
+        let rect = tweet.getBoundingClientRect();
+        let visibleHeight = rect.bottom - rect.top;
+
+        if (rect.top >= 0 && visibleHeight > maxVisibleHeight) {
+            tweetToReport = tweet;
+            maxVisibleHeight = visibleHeight;
+        }
+    });
+
+    if (!tweetToReport) {
+        logMessage("❌ No se encontró un tweet visible.");
+        alert("❌ No se encontró un tweet visible.");
+        return;
+    }
+
+    logMessage("✅ Tweet visible encontrado, buscando botón de opciones...");
+
+    let menuButton = tweetToReport.querySelector('button[data-testid="caret"]') ||
+                     tweetToReport.querySelector('button[aria-haspopup="menu"]') ||
+                     [...tweetToReport.querySelectorAll("button")].find(btn =>
+                        btn.querySelector("svg[viewBox='0 0 24 24']")
+                     );
 
     if (menuButton) {
         logMessage("✅ Botón de más opciones encontrado.");

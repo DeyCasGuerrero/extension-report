@@ -15,6 +15,13 @@
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
+    .container-report {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 15px;
+    }
+
     h3 {
       color: #333;
       margin-bottom: 15px;
@@ -39,10 +46,25 @@
       background: #ac2925;
     }
 
+    .select-container {
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+
     select {
       width: 100%;
       padding: 10px;
-      margin-top: 15px;
       border-radius: 5px;
       border: 1px solid #ccc;
       background-color: white;
@@ -58,12 +80,28 @@
 </head>
 <body>
   <h3>🚨 Reportar Tweet</h3>
-  <button id="report">Reportar</button>
-  <select id="report-reason">
-    <option value="1">🛑 Odio</option>
-    <option value="6">🚨 Spam</option>
-    <option value="2">⚠️ Abuso y Acoso</option>
-  </select>
+  <div class="container-report">
+    <button id="report">Reportar</button>
+    
+    <div class="select-container">
+      <label for="report-reason">Motivo:</label>
+      <select id="report-reason">
+        <option value="1">🛑 Odio</option>
+        <option value="6">🚨 Spam</option>
+        <option value="2">⚠️ Abuso y Acoso</option>
+      </select>
+    </div>
+    
+    <div class="select-container">
+      <label for="time">Tiempo entre reportes:</label>
+      <select id="time">
+        <option value="60000">60 segundos</option>
+        <option value="120000">2 minutos</option>
+        <option value="300000">5 minutos</option>
+      </select>
+    </div>
+  </div>
+  
   <script src="popup.js"></script>
 </body>
 </html>
